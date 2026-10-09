@@ -1,0 +1,280 @@
+{
+  "description": "User-supplied StarApp brand assets. WebP derivatives preserve the full source composition.",
+  "images": [
+    {
+      "source": "/Users/apple/Downloads/Cover_01.png",
+      "sourceSha256": "72ac7fa863c3003ac97ddba5fb09ee0250a567bf447ac522c8bdc737d8023d91",
+      "sourceWidth": 2172,
+      "sourceHeight": 724,
+      "name": "cover-tomorrow",
+      "variants": [
+        {
+          "file": "/assets/cover-tomorrow-700.webp",
+          "width": 700,
+          "height": 233,
+          "bytes": 20852
+        },
+        {
+          "file": "/assets/cover-tomorrow-1400.webp",
+          "width": 1400,
+          "height": 467,
+          "bytes": 56512
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Cover_02.png",
+      "sourceSha256": "99d7f7b1ba414651480f24086fe1fc74217f695a6c3748a89e74266e5a26d53d",
+      "sourceWidth": 2055,
+      "sourceHeight": 765,
+      "name": "cover-world-stage",
+      "variants": [
+        {
+          "file": "/assets/cover-world-stage-700.webp",
+          "width": 700,
+          "height": 261,
+          "bytes": 19418
+        },
+        {
+          "file": "/assets/cover-world-stage-1400.webp",
+          "width": 1400,
+          "height": 521,
+          "bytes": 47256
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Create_a_realistic_premium-style_onboarding_2K_20261009171758.jpg",
+      "sourceSha256": "5a9a4482985adff25c22984329f25939fd2e380e7ef78587ebd1392090b4675e",
+      "sourceWidth": 1792,
+      "sourceHeight": 2400,
+      "name": "creator-growth",
+      "variants": [
+        {
+          "file": "/assets/creator-growth-700.webp",
+          "width": 700,
+          "height": 938,
+          "bytes": 62068
+        },
+        {
+          "file": "/assets/creator-growth-1400.webp",
+          "width": 1400,
+          "height": 1875,
+          "bytes": 157346
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Creator_interacting_with_smartph..._2K_20261009171854.jpg",
+      "sourceSha256": "076ba92108a5b3237598a2cfe38f953023c0edb8a746d53556c8663a6e71aadb",
+      "sourceWidth": 1792,
+      "sourceHeight": 2400,
+      "name": "creator-insights",
+      "variants": [
+        {
+          "file": "/assets/creator-insights-700.webp",
+          "width": 700,
+          "height": 938,
+          "bytes": 57082
+        },
+        {
+          "file": "/assets/creator-insights-1400.webp",
+          "width": 1400,
+          "height": 1875,
+          "bytes": 140236
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Creator_using_smartphone_opportu..._2K_20261009171823.jpg",
+      "sourceSha256": "59bec61bbeaa979df90ec73c7f9a93f1c73da9f38431789a0832efe7949cedba",
+      "sourceWidth": 1792,
+      "sourceHeight": 2400,
+      "name": "creator-opportunity",
+      "variants": [
+        {
+          "file": "/assets/creator-opportunity-700.webp",
+          "width": 700,
+          "height": 938,
+          "bytes": 73318
+        },
+        {
+          "file": "/assets/creator-opportunity-1400.webp",
+          "width": 1400,
+          "height": 1875,
+          "bytes": 188548
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Creator_using_smartphone_social_app_2K_20261009171353.jpg",
+      "sourceSha256": "075bf739fa5a56f82c93bc87eae8213014e13e0fa88ccb556cf32c8cd420b8c7",
+      "sourceWidth": 1792,
+      "sourceHeight": 2400,
+      "name": "creator-community",
+      "variants": [
+        {
+          "file": "/assets/creator-community-700.webp",
+          "width": 700,
+          "height": 938,
+          "bytes": 67158
+        },
+        {
+          "file": "/assets/creator-community-1400.webp",
+          "width": 1400,
+          "height": 1875,
+          "bytes": 162638
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Flyer_01.png",
+      "sourceSha256": "820b972dfe5371db00c1b6a61610c22299b5092ef2454f82574f1e1bd62d81f2",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "name": "flyer-global-stage",
+      "variants": [
+        {
+          "file": "/assets/flyer-global-stage.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 57060
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Flyer_02.png",
+      "sourceSha256": "4a75337cdc06d242dce4243a0ea394b64ed5bee18ff5f1212940a6b93388655d",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "name": "flyer-every-talent",
+      "variants": [
+        {
+          "file": "/assets/flyer-every-talent.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 42900
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Flyer_03.png",
+      "sourceSha256": "2d6ea8f178572ffd4a9e36afaf80d0675e1fb6c486354adcd19761bfdc3ea661",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "name": "flyer-talents-shine",
+      "variants": [
+        {
+          "file": "/assets/flyer-talents-shine.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 82158
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Flyer_04.png",
+      "sourceSha256": "435a5d1f76a8b743eee2c9cca3e443b519f3f0ba213ce16f1b5ed00792c86d80",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "name": "flyer-new-week",
+      "variants": [
+        {
+          "file": "/assets/flyer-new-week.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 60526
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Flyer_05.png",
+      "sourceSha256": "2e3fe48290df3a2cd9784f4cdd1ef33cd1756f2b52b81d268ba74979785c36ba",
+      "sourceWidth": 1122,
+      "sourceHeight": 1402,
+      "name": "flyer-friday",
+      "variants": [
+        {
+          "file": "/assets/flyer-friday.webp",
+          "width": 800,
+          "height": 1000,
+          "bytes": 58008
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Flyer_07.png",
+      "sourceSha256": "41400617a9bdeb30b1ccd0b58cad92ddc17c54c5c465f5fe934b7b83c8772f4d",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "name": "flyer-coming-soon",
+      "variants": [
+        {
+          "file": "/assets/flyer-coming-soon.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 49052
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Profile_00.png",
+      "sourceSha256": "e5bd399e3d7f2d1529474755e4fc7fb4219ade2982eed2a60344d252bf53fbeb",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "name": "brand-cobalt",
+      "variants": [
+        {
+          "file": "/assets/brand-cobalt.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 30038
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Profile_01.png",
+      "sourceSha256": "7913cc4c7be499d8522f9029af9a065f7f6ccc2377826c5af928d0c43578aba3",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "name": "brand-silver",
+      "variants": [
+        {
+          "file": "/assets/brand-silver.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 36132
+        }
+      ]
+    },
+    {
+      "source": "/Users/apple/Downloads/Profile_02.png",
+      "sourceSha256": "3cc77c549a618f342ea14466628a674cd562357259d32b5443c9500ff28e2a51",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "name": "brand-sculpture",
+      "variants": [
+        {
+          "file": "/assets/brand-sculpture.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 43146
+        }
+      ]
+    }
+  ],
+  "brandMark": {
+    "file": "/assets/brand-mark.svg",
+    "blueFile": "/assets/brand-mark-blue.svg",
+    "shapeFile": "/assets/logo-shape.json",
+    "viewBox": [
+      0,
+      0,
+      653,
+      553
+    ],
+    "contours": 2,
+    "bezierSegments": 94,
+    "source": "Profile_00.png"
+  }
+}
