@@ -3,6 +3,8 @@ import { getDb } from "@/db";
 import { waitlistEntries, waitlistRateLimits } from "@/db/schema";
 import {
   dailyIpDigest,
+  formPreflight,
+  formReply,
   readWaitlistRequest,
   validateWaitlist,
   WAITLIST_CONSENT_VERSION,
@@ -10,14 +12,13 @@ import {
   WaitlistRequestError,
 } from "@/lib/waitlist";
 
-function reply(body: { ok: true } | { ok: false; error: string }, status = 200, headers: Record<string, string> = {}) {
-  return Response.json(body, {
-    status,
-    headers: { "Cache-Control": "no-store", ...headers },
-  });
+export function OPTIONS(request: Request) {
+  return formPreflight(request);
 }
 
 export async function POST(request: Request) {
+  const reply = (body: { ok: true } | { ok: false; error: string }, status = 200, headers: Record<string, string> = {}) =>
+    formReply(request, body, status, headers);
   try {
     const validation = validateWaitlist(await readWaitlistRequest(request));
     if (!validation.ok) return reply(validation, 400);

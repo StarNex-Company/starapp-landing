@@ -2,6 +2,8 @@
 
 A standalone marketing website for StarApp, based on the supplied product document and campaign assets. It includes a custom Three.js rendering of the supplied brand mark, responsive product storytelling, an early-access list, a privacy notice, and privacy-removal requests. This project is independent of Olympus.
 
+Public frontend: [StarApp on GitHub Pages](https://starcompanytechng-lab.github.io/starapp-landing/). Pushes to `main` automatically publish frontend updates. See [GitHub hosting and updates](docs/GITHUB-HOSTING.md) for the editing guide, local static preview, and the separate backend deployment process.
+
 ## Run locally
 
 Requires Node.js 22.13 or newer.
@@ -27,7 +29,7 @@ Apply each migration once to a new local database, in order. The local database 
 
 ## Early-access operations
 
-`POST /api/waitlist` saves an email, audience, talent category, consent version, and signup time. Email and audience are unique together. Duplicate requests return the same success response and do not create another record. The optional talent field is normalized to `Other` by the form. Validation, same-origin JSON enforcement, a bounded body, a honeypot, and daily hashed-IP limits are enforced server-side.
+`POST /api/waitlist` saves an email, audience, talent category, consent version, and signup time. Email and audience are unique together. Duplicate requests return the same success response and do not create another record. The optional talent field is normalized to `Other` by the form. Validation, explicit allowed-origin JSON enforcement, a bounded body, a honeypot, and daily hashed-IP limits are enforced server-side.
 
 Registrations are held in the private `waitlist_entries` database table. The site owner can inspect and export these through the Sites database tools. There is no publicly readable registration endpoint. Email delivery and double opt-in are not configured: signup confirms storage, not an email being sent or ownership verification. The StarApp team remains responsible for consent-respecting launch communications.
 
@@ -57,4 +59,4 @@ Useful references: [Three.js](https://threejs.org/docs/), [W3C form accessibilit
 
 ## Hosting and ownership
 
-The tracked hosting manifest is bound to `appgprj_6ac918187b788191ae4afe19d7aeff20`. Preserve that identity when updating. New Sites default to owner-private access; the intended public launch requires selecting public access and, optionally, attaching the owner's domain. No public sharing change or custom domain was configured during creation.
+The tracked hosting manifest is bound to `appgprj_6ac918187b788191ae4afe19d7aeff20`. Preserve that identity when updating. GitHub Pages hosts the public frontend; the Sites project hosts its form APIs and database. Public form access requires public backend access, while database records remain private. No custom domain is configured.

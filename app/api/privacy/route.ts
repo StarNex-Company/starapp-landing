@@ -1,13 +1,15 @@
 import { lt, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { privacyRequests, waitlistRateLimits } from "@/db/schema";
-import { dailyIpDigest, normalizeSignupEmail, readWaitlistRequest, WaitlistRequestError } from "@/lib/waitlist";
+import { dailyIpDigest, formPreflight, formReply, normalizeSignupEmail, readWaitlistRequest, WaitlistRequestError } from "@/lib/waitlist";
 
-function reply(body: { ok: true } | { ok: false; error: string }, status = 200, headers: Record<string, string> = {}) {
-  return Response.json(body, { status, headers: { "Cache-Control": "no-store", ...headers } });
+export function OPTIONS(request: Request) {
+  return formPreflight(request);
 }
 
 export async function POST(request: Request) {
+  const reply = (body: { ok: true } | { ok: false; error: string }, status = 200, headers: Record<string, string> = {}) =>
+    formReply(request, body, status, headers);
   try {
     const payload = await readWaitlistRequest(request);
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) {

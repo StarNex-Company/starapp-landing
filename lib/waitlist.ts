@@ -11,6 +11,7 @@ export const TALENT_CATEGORIES = [
 export const WAITLIST_BODY_LIMIT = 4096;
 export const WAITLIST_CONSENT_VERSION = "waitlist-v1";
 export const WAITLIST_DAILY_LIMIT = 30;
+const GITHUB_PAGES_ORIGIN = "https://starcompanytechng-lab.github.io";
 
 export type WaitlistEntry = {
   email: string;
@@ -92,12 +93,62 @@ export class WaitlistRequestError extends Error {
   }
 }
 
-export async function readWaitlistRequest(request: Request): Promise<unknown> {
+function trustedFormOrigin(request: Request): string | null {
   const origin = request.headers.get("origin");
+  if (origin === new URL(request.url).origin || origin === GITHUB_PAGES_ORIGIN) return origin;
+  return null;
+}
+
+function assertFormOrigin(request: Request): void {
+  const origin = trustedFormOrigin(request);
   const site = request.headers.get("sec-fetch-site");
-  if (origin !== new URL(request.url).origin || (site && site !== "same-origin")) {
+  if (!origin || (origin !== GITHUB_PAGES_ORIGIN && site && site !== "same-origin")) {
     throw new WaitlistRequestError("Please submit this form from the StarApp website.", 403);
   }
+}
+
+function formResponseHeaders(request: Request, headers: Record<string, string> = {}): Headers {
+  const result = new Headers({ "Cache-Control": "no-store", ...headers });
+  result.set("Vary", "Origin");
+  const origin = trustedFormOrigin(request);
+  if (origin) result.set("Access-Control-Allow-Origin", origin);
+  return result;
+}
+
+export function formReply(
+  request: Request,
+  body: { ok: true } | { ok: false; error: string },
+  status = 200,
+  headers: Record<string, string> = {},
+): Response {
+  return Response.json(body, { status, headers: formResponseHeaders(request, headers) });
+}
+
+export function formPreflight(request: Request): Response {
+  try {
+    assertFormOrigin(request);
+    if (request.headers.get("access-control-request-method") !== "POST") {
+      throw new WaitlistRequestError("This form only accepts POST submissions.", 405);
+    }
+    const requestedHeaders = request.headers.get("access-control-request-headers");
+    if (requestedHeaders && requestedHeaders.split(",").some((header) => header.trim().toLowerCase() !== "content-type")) {
+      throw new WaitlistRequestError("This form only accepts the Content-Type request header.", 403);
+    }
+    const headers = formResponseHeaders(request);
+    headers.set("Access-Control-Allow-Methods", "POST");
+    headers.set("Access-Control-Allow-Headers", "Content-Type");
+    headers.set("Vary", "Origin, Access-Control-Request-Method, Access-Control-Request-Headers");
+    return new Response(null, { status: 204, headers });
+  } catch (error) {
+    if (!(error instanceof WaitlistRequestError)) throw error;
+    const response = formReply(request, { ok: false, error: error.message }, error.status);
+    response.headers.set("Vary", "Origin, Access-Control-Request-Method, Access-Control-Request-Headers");
+    return response;
+  }
+}
+
+export async function readWaitlistRequest(request: Request): Promise<unknown> {
+  assertFormOrigin(request);
   const contentType = request.headers.get("content-type")?.split(";")[0].trim().toLowerCase();
   if (contentType !== "application/json") {
     throw new WaitlistRequestError("Please submit your details using the form on this website.", 415);

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react';
+import { apiPath } from '../../lib/site-paths';
 
 export default function PrivacyRequest() {
   const [state, setState] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -21,7 +22,7 @@ export default function PrivacyRequest() {
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 15000);
     try {
-      const response = await fetch('/api/privacy', {
+      const response = await fetch(apiPath('/api/privacy'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { sitePath } from "../../lib/site-paths";
 
 type BrandSceneProps = {
   paused?: boolean;
@@ -54,7 +55,7 @@ export default function BrandScene({ paused = false }: BrandSceneProps) {
             import("three"),
             import("three/addons/loaders/SVGLoader.js"),
             import("three/addons/environments/RoomEnvironment.js"),
-            fetch("/assets/brand-mark.svg", {
+            fetch(sitePath("/assets/brand-mark.svg"), {
               signal: controller.signal,
             }).then((response) => {
               if (!response.ok) throw new Error("Brand asset unavailable");
@@ -373,7 +374,7 @@ export default function BrandScene({ paused = false }: BrandSceneProps) {
         {/* The original silhouette also works without JavaScript or WebGL. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/assets/brand-mark-blue.svg"
+          src={sitePath("/assets/brand-mark-blue.svg")}
           alt=""
           width="653"
           height="553"
