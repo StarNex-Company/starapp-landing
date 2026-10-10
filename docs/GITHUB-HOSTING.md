@@ -21,6 +21,8 @@ The workflow uses GitHub's built-in token and OpenID Connect; no personal access
 | --- | --- |
 | Headlines, sections, FAQ, waitlist text | `app/LandingPage.tsx` |
 | Layout, colors, typography, responsive styling | `app/globals.css` |
+| QR card, sharing, and downloads | `app/components/ShareSection.tsx` |
+| QR and share destinations | `lib/share-config.json`, `scripts/generate-qr.py` |
 | 3D brand sculpture | `app/components/BrandScene.tsx` |
 | Images | `public/assets/` |
 | Privacy notice | `app/privacy/page.tsx` |
@@ -52,3 +54,15 @@ Email delivery is not connected. A successful form submission confirms database 
 Update `STARAPP_SITE_ORIGIN` and `STARAPP_BASE_PATH` in the workflow, configure the domain in GitHub's Pages settings, and add the new exact origin to the backend allowlist before deploying. For a domain root, use `/` as the base path. Never put API keys or database credentials in `STARAPP_*` build variables; those values become public browser code.
 
 References: [GitHub Pages hosting](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages), [deployment workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+## QR and sharing flow
+
+The QR opens `https://starcompanytechng-lab.github.io/starapp-landing/?via=qr#waitlist`. This is the prerendered landing page with an early-access anchor, so it needs no redirect service, login, or installed app. QR visitors see a welcome message without automatically opening their keyboard. The same-device button takes them directly to the form. Successful signups offer a link back to sharing.
+
+Native sharing and copy-link use the matching `?via=share#waitlist` URL. Share-sheet cancellation does not copy anything; clipboard failures reveal a selectable link. The `via` marker selects the welcome treatment only; it does not add analytics or send personal information.
+
+The card offers downloadable PNG and SVG versions. The SVG is preferred for printing. Preserve the white border, square proportions, dark-on-white contrast, and an unobstructed QR surface. Always scan-test at the final printed/displayed size.
+
+Destinations live in `lib/share-config.json`. After changing them, regenerate both assets with `scripts/generate-qr.py` (dependency/setup instructions are in the script), rebuild, and check the decoded destination. Printed QR codes keep their original destination; changing the config cannot update already distributed copies. Keep the existing GitHub URL available or plan redirects before moving domains.
+
+The QR and sharing section can load publicly while the form service remains private. Public registration still requires the owner to authorize public access to the existing Sites backend. A QR scan alone does not register a visitor, send an email, or guarantee early access.

@@ -39,3 +39,46 @@
 .waitlist-copy>p,.waitlist-copy>.eyebrow{color:#e4ebff}.role-options label{color:#63708a}.signup-success>p{color:#5d6a83}.legal-content p,.legal-content ul{color:#5d6a83}.journey-tabs>button[aria-selected=true]{color:var(--blue)}
 .field-label>span{color:#5d6a83}
 @media(max-width:760px){.waitlist-copy h2>br:nth-of-type(2){display:initial}.waitlist-copy h2>span:before{content:none}}
+
+/* A quiet, stationary surface keeps the QR easy for phone cameras to read. */
+.share-section{padding-bottom:80px;scroll-margin-top:110px}
+.share-panel{display:grid;grid-template-columns:minmax(0,1fr) 322px;align-items:center;gap:64px;padding:54px 64px 42px;background:linear-gradient(120deg,#f8faff,#edf2ff);border:1px solid #e1e7f4;border-radius:18px}
+.share-copy>.eyebrow{font-size:9px;letter-spacing:1.5px;gap:9px}
+.share-spark{font-size:19px}
+.share-copy h2{font-size:52px;line-height:1.09;letter-spacing:-2.5px;margin:24px 0 20px;font-weight:650}
+.share-copy>p:not(.share-status){max-width:420px;color:#5d6a83;font-size:13px;line-height:1.9}
+.scan-steps{list-style:none;padding:0;margin:26px 0 27px;display:grid;gap:18px}
+.scan-steps li{display:flex;gap:15px;align-items:flex-start}
+.scan-steps li>span{font-size:10px;font-variant-numeric:tabular-nums;color:var(--blue);padding-top:3px;letter-spacing:.7px}
+.scan-steps strong{display:block;font-size:12px;font-weight:650;line-height:1.6}
+.scan-steps small{display:block;color:#5d6a83;font-size:11px;line-height:1.8;margin-top:2px}
+.share-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.share-actions .button{font-size:12px;gap:12px;min-height:46px;padding:13px 20px}
+.share-actions .button:disabled{opacity:.7;cursor:wait}
+.share-copy-button{display:inline-flex;align-items:center;gap:9px;min-height:44px;font-size:12px;font-weight:600;color:#263859;background:none;border:0;cursor:pointer}
+.share-copy-button:hover{color:var(--blue)}
+.share-status{min-height:36px;font-size:11px;line-height:1.7;margin-top:12px;color:#3e5478;max-width:430px}
+.share-manual-copy label{display:block;font-size:11px;margin:8px 0;color:#3e5478}
+.share-manual-copy input{width:100%;min-width:0;padding:12px;background:#fff;border:1px solid #a4b6dd;border-radius:5px;font:inherit;font-size:12px;color:#163873}
+.qr-side{display:flex;flex-direction:column;align-items:center;gap:12px}
+.qr-card{width:300px;max-width:100%;padding:23px 23px 13px;background:#fff;border:1px solid #e1e7f2;border-radius:15px;box-shadow:0 12px 40px #153e9210}
+.qr-card-heading{display:flex;align-items:center;gap:7px;font-size:20px;font-weight:750;letter-spacing:-.8px;padding-bottom:13px}
+.qr-card-heading>svg{margin-left:auto;color:#7184a7}
+.qr-code-link{display:block;width:100%;background:#fff;border-radius:2px}
+.starapp-qr{display:block;width:100%;height:auto;aspect-ratio:1;transform:none}
+.qr-caption{font-size:8px;font-weight:700;letter-spacing:1.15px;text-align:center;color:#173777;margin:11px 0}
+.qr-explanation{font-size:11px;line-height:1.7;text-align:center;color:#5d6a83;margin:0 0 16px}
+.qr-downloads{display:flex;align-items:center;justify-content:center;gap:8px;border-top:1px solid #e9edf5;padding-top:9px;color:#5d6a83;font-size:10px}
+.qr-downloads a{display:inline-flex;align-items:center;min-height:32px;min-width:28px;justify-content:center;font-size:10px;font-weight:700;color:#173777;text-decoration:underline;text-underline-offset:3px}
+.qr-device-link{display:flex;align-items:center;justify-content:center;gap:6px;background:none;border:0;min-height:44px;padding:8px 0;font:inherit;font-size:11px;font-weight:600;color:#244476;cursor:pointer;text-align:center}
+.qr-device-link:hover{color:var(--blue)}
+.scan-arrival{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:#edf3ff;border:1px solid #d6e3ff;border-radius:7px;color:#173777;font-size:11px;line-height:1.75;margin:0 0 22px}
+.scan-arrival>svg{flex-shrink:0;margin-top:3px}
+.scan-arrival strong{font-weight:650}
+.success-share-link{display:flex;align-items:center;justify-content:center;gap:6px;color:#173777;font-size:11px;line-height:1.7;min-height:44px;margin-top:10px;text-decoration:underline;text-underline-offset:3px}
+.waitlist-noscript{display:block;background:#fff3d7;color:#67460b;padding:12px;margin-bottom:18px;font-size:12px;line-height:1.7}
+.footer-bottom>div{flex-wrap:wrap}
+@media(max-width:1024px){.share-panel{gap:32px;padding:40px}.share-copy h2{font-size:46px}}
+@media(max-width:760px){.share-section{padding-bottom:48px;scroll-margin-top:86px}.share-panel{grid-template-columns:minmax(0,1fr);padding:30px 24px 24px;gap:18px}.share-copy h2{font-size:44px;margin-top:20px;letter-spacing:-2px}.share-copy>.eyebrow{font-size:7px;letter-spacing:1.1px}.share-copy>p:not(.share-status){font-size:12px}.share-actions{gap:22px}.share-actions .button{padding-inline:16px;font-size:11px}.share-copy-button{font-size:11px}.share-status{min-height:0;margin-top:12px}.share-status:empty{margin:0}.qr-side{gap:13px}.qr-device-link{order:-1;background:#e1eaff;width:100%;border-radius:6px;font-size:11px}.qr-card{width:300px}.share-manual-copy input{font-size:16px}.scan-arrival{font-size:10px;padding:10px;margin-bottom:18px}}
+/* The root scroll-padding already provides clearance for the sticky header. */
+.waitlist-section,.share-section{scroll-margin-top:0}
