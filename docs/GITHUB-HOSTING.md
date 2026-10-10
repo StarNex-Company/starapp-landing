@@ -1,8 +1,8 @@
 # GitHub hosting and updates
 
-Repository: https://github.com/starcompanytechng-lab/starapp-landing
+Repository: https://github.com/StarNex-Company/starapp-landing
 
-Website: https://starcompanytechng-lab.github.io/starapp-landing/
+Website: https://starnex-company.github.io/starapp-landing/
 
 GitHub Pages serves the landing page, privacy page, images, fonts, and 3D animation. The existing Cloudflare/Sites backend stores waitlist registrations and privacy requests. GitHub Pages is static hosting and does not run the database or API routes.
 
@@ -45,7 +45,7 @@ Open the printed address with `/starapp-landing/` appended. Preview form submiss
 
 Visual and content changes publish automatically from GitHub. Database/API changes must also be deployed to the existing Sites project `appgprj_6ac918187b788191ae4afe19d7aeff20` using its source workflow. A GitHub Pages deployment alone does not update the server.
 
-Both form endpoints accept the exact GitHub Pages origin `https://starcompanytechng-lab.github.io`, with no wildcard CORS or browser credentials. The backend must allow public visitors for the public site's forms to work. Stored registrations and privacy requests remain available only through the owner's database tools, with no public read endpoint.
+Both form endpoints accept the exact GitHub Pages origin `https://starnex-company.github.io`, with no wildcard CORS or browser credentials. The backend must allow public visitors for the public site's forms to work. Stored registrations and privacy requests remain available only through the owner's database tools, with no public read endpoint.
 
 Email delivery is not connected. A successful form submission confirms database storage, not delivery of a confirmation email. Privacy requests require owner review and do not delete registrations automatically.
 
@@ -57,7 +57,7 @@ References: [GitHub Pages hosting](https://docs.github.com/en/pages/getting-star
 
 ## QR and sharing flow
 
-The QR opens `https://starcompanytechng-lab.github.io/starapp-landing/?via=qr#waitlist`. This is the prerendered landing page with an early-access anchor, so it needs no redirect service, login, or installed app. QR visitors see a welcome message without automatically opening their keyboard. The same-device button takes them directly to the form. Successful signups offer a link back to sharing.
+The QR opens `https://starnex-company.github.io/starapp-landing/?via=qr#waitlist`. This is the prerendered landing page with an early-access anchor, so it needs no redirect service, login, or installed app. QR visitors see a welcome message without automatically opening their keyboard. The same-device button takes them directly to the form. Successful signups offer a link back to sharing.
 
 Native sharing and copy-link use the matching `?via=share#waitlist` URL. Share-sheet cancellation does not copy anything; clipboard failures reveal a selectable link. The `via` marker selects the welcome treatment only; it does not add analytics or send personal information.
 
