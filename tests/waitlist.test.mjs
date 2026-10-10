@@ -47,16 +47,16 @@ test("accepts same-origin JSON and rejects inconsistent fetch metadata", async (
   await assert.rejects(readWaitlistRequest(request("{")), { status: 400 });
 });
 
-const pagesOrigin = "https://starcompanytechng-lab.github.io";
+const pagesOrigin = "https://starnex-company.github.io";
 const untrustedOrigins = [
   "https://other.example",
   "null",
-  "https://starcompanytechng-lab.github.io.evil.example",
-  "https://starcompanytechng-lab.github.io@evil.example",
-  "http://starcompanytechng-lab.github.io",
-  "https://starcompanytechng-lab.github.io:444",
-  "https://starcompanytechng-lab.github.io/path",
-  "https://starcompanytechng-lab.github.io/",
+  "https://starnex-company.github.io.evil.example",
+  "https://starnex-company.github.io@evil.example",
+  "http://starnex-company.github.io",
+  "https://starnex-company.github.io:444",
+  "https://starnex-company.github.io/path",
+  "https://starnex-company.github.io/",
   "",
 ];
 
