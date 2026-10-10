@@ -33,7 +33,7 @@ jobs:
         run: npm run build:pages
         env:
           STARAPP_BASE_PATH: /starapp-landing/
-          STARAPP_SITE_ORIGIN: https://starcompanytechng-lab.github.io
+          STARAPP_SITE_ORIGIN: https://starnexcompany.github.io
           STARAPP_API_ORIGIN: https://starapp-world-stage.bold-crab-5018.chatgpt.site
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
