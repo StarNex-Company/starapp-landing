@@ -47,20 +47,20 @@ test("accepts same-origin JSON and rejects inconsistent fetch metadata", async (
   await assert.rejects(readWaitlistRequest(request("{")), { status: 400 });
 });
 
-const pagesOrigin = "https://starnex-company.github.io";
+const pagesOrigin = "https://starapp.starnex.company";
 const untrustedOrigins = [
   "https://other.example",
   "null",
-  "https://starnex-company.github.io.evil.example",
-  "https://starnex-company.github.io@evil.example",
-  "http://starnex-company.github.io",
-  "https://starnex-company.github.io:444",
-  "https://starnex-company.github.io/path",
-  "https://starnex-company.github.io/",
+  "https://starapp.starnex.company.evil.example",
+  "https://starapp.starnex.company@evil.example",
+  "http://starapp.starnex.company",
+  "https://starapp.starnex.company:444",
+  "https://starapp.starnex.company/path",
+  "https://starapp.starnex.company/",
   "",
 ];
 
-test("accepts the exact GitHub Pages origin with cross-site fetch metadata", async () => {
+test("accepts the exact site origin with cross-site fetch metadata", async () => {
   for (const path of ["waitlist", "privacy"]) {
     const trusted = new Request(`https://starapp.example/api/${path}`, {
       method: "POST",

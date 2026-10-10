@@ -32,8 +32,8 @@ jobs:
       - name: Build static website
         run: npm run build:pages
         env:
-          STARAPP_BASE_PATH: /starapp-landing/
-          STARAPP_SITE_ORIGIN: https://starnex-company.github.io
+          STARAPP_BASE_PATH: /
+          STARAPP_SITE_ORIGIN: https://starapp.starnex.company
           STARAPP_API_ORIGIN: https://starapp-world-stage.bold-crab-5018.chatgpt.site
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'

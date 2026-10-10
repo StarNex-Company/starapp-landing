@@ -11,7 +11,7 @@ export const TALENT_CATEGORIES = [
 export const WAITLIST_BODY_LIMIT = 4096;
 export const WAITLIST_CONSENT_VERSION = "waitlist-v1";
 export const WAITLIST_DAILY_LIMIT = 30;
-const GITHUB_PAGES_ORIGIN = "https://starnex-company.github.io";
+const GITHUB_PAGES_ORIGIN = "https://starapp.starnex.company";
 
 export type WaitlistEntry = {
   email: string;

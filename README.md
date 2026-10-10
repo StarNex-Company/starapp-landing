@@ -2,7 +2,7 @@
 
 A standalone marketing website for StarApp, based on the supplied product document and campaign assets. It includes a custom Three.js rendering of the supplied brand mark, responsive product storytelling, an early-access list, a privacy notice, and privacy-removal requests. This project is independent of Olympus.
 
-Public frontend: [StarApp on GitHub Pages](https://starnex-company.github.io/starapp-landing/). Pushes to `main` automatically publish frontend updates. See [GitHub hosting and updates](docs/GITHUB-HOSTING.md) for the editing guide, local static preview, and the separate backend deployment process.
+Public frontend: [StarApp on GitHub Pages](https://starapp.starnex.company/). Pushes to `main` automatically publish frontend updates. See [GitHub hosting and updates](docs/GITHUB-HOSTING.md) for the editing guide, local static preview, and the separate backend deployment process.
 
 ## Run locally
 
