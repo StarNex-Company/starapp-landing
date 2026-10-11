@@ -1,6 +1,6 @@
 # StarApp prelaunch website
 
-A standalone marketing website for StarApp, based on the supplied product document and campaign assets. It includes a custom Three.js rendering of the supplied brand mark, responsive product storytelling, an early-access list, a privacy notice, and privacy-removal requests. This project is independent of Olympus.
+A standalone marketing website for StarApp, based on the supplied product document and campaign assets. It includes a custom Three.js rendering of the supplied brand mark, responsive product storytelling, an early-access form, and a privacy notice. The separate privacy-removal service remains private pending access configuration. This project is independent of Olympus.
 
 Public frontend: [StarApp on GitHub Pages](https://starapp.starnex.company/). Pushes to `main` automatically publish frontend updates. See [GitHub hosting and updates](docs/GITHUB-HOSTING.md) for the editing guide, local static preview, and the separate backend deployment process.
 
@@ -29,11 +29,13 @@ Apply each migration once to a new local database, in order. The local database 
 
 ## Early-access operations
 
-`POST /api/waitlist` saves an email, audience, talent category, consent version, and signup time. Email and audience are unique together. Duplicate requests return the same success response and do not create another record. The optional talent field is normalized to `Other` by the form. Validation, explicit allowed-origin JSON enforcement, a bounded body, a honeypot, and daily hashed-IP limits are enforced server-side.
+The public signup form sends the visitor's name, email, audience, talent category, and consent version to the existing Google Form configured in `lib/google-form.ts`. An ordinary HTML form POST navigates to Google Forms in the same tab, so Google displays its actual confirmation or validation errors. The site does not infer successful storage from an unreadable cross-origin response. The optional talent field is normalized to `Other`; local validation and a hidden honeypot run before the handoff.
 
-Registrations are held in the private `waitlist_entries` database table. The site owner can inspect and export these through the Sites database tools. There is no publicly readable registration endpoint. Email delivery and double opt-in are not configured: signup confirms storage, not an email being sent or ownership verification. The StarApp team remains responsible for consent-respecting launch communications.
+Current responses are managed in the StarApp team's Google Form. This flow does not use D1 deduplication or the legacy signup endpoint's rate limits. Keep the configured form recipient and entry IDs aligned with the live form; a changed required question can prevent acceptance. Email delivery and double opt-in are not configured by this website. Google's confirmation does not prove that an email was sent or ownership was verified. The StarApp team remains responsible for consent-respecting launch communications.
 
-`POST /api/privacy` records requests for removal in `privacy_requests`, with a pending status. Repeated pending requests are deduplicated. The owner should review them, verify address ownership where appropriate, act on the request, and mark it completed. Recording a request does not automatically delete records or send an email. Temporary rate-limit digests are stored separately and older dates are removed as requests arrive.
+The legacy `POST /api/waitlist` route and `waitlist_entries` table remain for earlier registrations; the current landing-page signup does not call them. That route validates JSON, deduplicates email and audience, and enforces bounded bodies and daily hashed-IP limits. The site owner can inspect existing D1 records through Sites database tools. There is no public registration-list endpoint.
+
+The separate `POST /api/privacy` route records removal requests in `privacy_requests` with a pending status and deduplicates repeated pending requests. Its Sites host remains private, so the public removal form is currently unavailable; the notice discloses this. Enabling that service requires an explicit owner-approved access change and live verification. Once requests can be received, the owner should review them, verify address ownership where appropriate, act on records in the relevant storage service, and mark the request completed. Recording a request does not delete data from Google Forms or D1, and does not send email. The privacy endpoint stores temporary rate-limit digests separately and removes older dates as requests arrive.
 
 ## Design and assets
 
@@ -49,14 +51,14 @@ Registrations are held in the private `waitlist_entries` database table. The sit
 
 ```sh
 npx tsc --noEmit --incremental false
-node --test tests/waitlist.test.mjs
+node --test tests/waitlist.test.mjs tests/google-form.test.mjs
 npm run build
 ```
 
-Browser verification covers the real local API/database, duplicate submissions, invalid requests, friendly service failures, tab/FAQ controls, mobile navigation, reduced motion, five viewport widths, and accessibility. QA evidence is checkout-local in ignored `.sites-runtime/qa/`.
+Before publishing a signup change, verify the actual Google Forms handoff and response, field mapping, client validation, and return navigation. Also check tab/FAQ controls, mobile navigation, reduced motion, viewport sizing, and accessibility. Legacy API/database checks are separate from the public Google Forms signup. QA evidence is checkout-local in ignored `.sites-runtime/qa/`.
 
 Useful references: [Three.js](https://threejs.org/docs/), [W3C form accessibility](https://www.w3.org/WAI/tutorials/forms/), and [Web Vitals](https://web.dev/articles/vitals).
 
 ## Hosting and ownership
 
-The tracked hosting manifest is bound to `appgprj_6ac918187b788191ae4afe19d7aeff20`. Preserve that identity when updating. GitHub Pages hosts the public frontend; the Sites project hosts its form APIs and database. Public form access requires public backend access, while database records remain private. No custom domain is configured.
+The tracked hosting manifest is bound to `appgprj_6ac918187b788191ae4afe19d7aeff20`. Preserve that identity when updating. GitHub Pages hosts the public frontend at `https://starapp.starnex.company/`; Google Forms receives current signups. The Sites project retains the legacy APIs and database. Its audience remains private pending explicit owner approval, affecting public privacy requests but not the Google Forms handoff. Changing website access does not create a public database-read endpoint.

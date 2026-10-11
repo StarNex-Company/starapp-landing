@@ -21,7 +21,7 @@ const questions = [
   { q: 'Is the app available yet?', a: 'Not yet. We’re building StarApp and gathering our early-access community. Join the list to register your interest in launch news and beta opportunities. Launch timing and supported regions will be announced as plans are confirmed.' },
   { q: 'How will challenges and rewards work?', a: 'The plan is to run monthly challenges by talent category, with published entry rules, deadlines, rankings, and results. Eligibility, judging, and any prizes will be specified for each challenge. Joining the waitlist does not enter you into a competition or guarantee a reward.' },
   { q: 'How can brands and scouts get involved?', a: 'Choose “I’m a brand or scout” in the early-access form. The planned Scout Marketplace will help verified companies discover relevant creators and send professional requests. Creators will choose whether to accept contact.' },
-  { q: 'What happens when I join the waitlist?', a: 'Your email, interest, and chosen talent category are saved for the StarApp team to manage early access and launch communication. You are not creating an app account, paying for a subscription, or guaranteed a beta invitation.' },
+  { q: 'What happens when I join the waitlist?', a: 'Your name, email, interest, talent category, and consent are submitted to the StarApp team’s Google Form. Google shows a confirmation when your response is recorded, or explains anything that needs correcting. You are not creating an app account, paying for a subscription, or guaranteed a beta invitation.' },
 ];
 
 function Brand({ light = false }: { light?: boolean }) {
@@ -42,9 +42,20 @@ export default function LandingPage() {
   const [scanArrival, setScanArrival] = useState(false);
   const [formReady, setFormReady] = useState(false);
   const emailRef = useRef<HTMLInputElement>(null);
+  const googleFormRef = useRef<HTMLFormElement | null>(null);
   const successRef = useRef<HTMLDivElement>(null);
   const chapterPanel = useRef<HTMLDivElement>(null);
   const active = chapters[chapter];
+
+  useEffect(() => {
+    const restore = () => {
+      googleFormRef.current?.remove();
+      googleFormRef.current = null;
+      setFormState(current => current === 'sending' ? 'idle' : current);
+    };
+    window.addEventListener('pageshow', restore);
+    return () => { window.removeEventListener('pageshow', restore); googleFormRef.current?.remove(); };
+  }, []);
 
   useEffect(() => {
     setFormReady(true);
@@ -111,33 +122,44 @@ export default function LandingPage() {
     const next = !paused; setPaused(next);
     try { localStorage.setItem('starapp-motion-paused', String(next)); } catch { /* Motion works without storage. */ }
   }
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (formState === 'sending') return;
     const data = new FormData(event.currentTarget);
     const email = String(data.get('email') ?? '').trim();
     const name = String(data.get('name') ?? '').trim();
     setFormState('sending'); setError('');
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 15000);
     try {
       const normalized = normalizeSignupEmail(email);
       if (!name) throw new Error('Please enter your name.');
       if (!normalized) throw new Error('Please enter a valid email address.');
       if (data.get('consent') !== 'on') throw new Error('Please confirm you’d like early-access updates.');
-      // Bots fill the hidden field; show them success without storing anything.
-      if (!String(data.get('website') ?? '').trim()) {
-        // Google Forms stores the answers; no-cors means the reply is unreadable, so a completed request counts as saved.
-        await fetch(GOOGLE_FORM_ACTION, {
-          method: 'POST', mode: 'no-cors', signal: controller.signal,
-          body: googleFormBody({ name, email: normalized, audience, talent: talent || 'Other', consentVersion: WAITLIST_CONSENT_VERSION }),
-        });
+      if (String(data.get('website') ?? '').trim()) {
+        // The honeypot never sends a registration.
+        setSubmittedEmail(normalized); setFormState('success');
+        return;
       }
-      setSubmittedEmail(normalized); setFormState('success');
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = GOOGLE_FORM_ACTION;
+      form.target = '_self';
+      form.acceptCharset = 'UTF-8';
+      form.hidden = true;
+      for (const [fieldName, fieldValue] of googleFormBody({ name, email: normalized, audience, talent: talent || 'Other', consentVersion: WAITLIST_CONSENT_VERSION })) {
+        const field = document.createElement('input');
+        field.type = 'hidden'; field.name = fieldName; field.value = fieldValue;
+        form.appendChild(field);
+      }
+      googleFormRef.current?.remove();
+      googleFormRef.current = form;
+      document.body.appendChild(form);
+      // Native navigation shows Google's actual receipt or error; opaque fetch cannot confirm storage.
+      HTMLFormElement.prototype.submit.call(form);
     } catch (e) {
-      setError(e instanceof TypeError ? 'We couldn’t connect to the signup service. Please check your connection and try again.' : e instanceof Error && e.name !== 'AbortError' ? e.message : 'The connection took a little too long. Please try again.');
+      googleFormRef.current?.remove(); googleFormRef.current = null;
+      setError(e instanceof Error ? e.message : 'We couldn’t open the signup form. Please try again.');
       setFormState('error');
-    } finally { clearTimeout(timeout); }
+    }
   }
 
   return <div className="site-shell">
@@ -202,7 +224,7 @@ export default function LandingPage() {
 
       <section className="faq-section container section-space" aria-labelledby="faq-title"><div className="faq-intro" data-reveal><div className="section-label"><span>05</span> A FEW THINGS TO KNOW</div><h2 id="faq-title">Curious?<br /><span className="serif-word">Good.</span></h2><p>Every new chapter starts<br />with a few questions.</p><div className="faq-spark" aria-hidden="true">✳</div></div><div className="faq-list" data-reveal>{questions.map((item, i) => <div className={`faq-item ${openFaq === i ? 'is-open' : ''}`} key={item.q}><h3><button aria-expanded={openFaq === i} aria-controls={`faq-answer-${i}`} id={`faq-question-${i}`} onClick={() => setOpenFaq(openFaq === i ? null : i)}>{item.q}<span><ChevronDown size={20} /></span></button></h3><div id={`faq-answer-${i}`} role="region" aria-labelledby={`faq-question-${i}`} hidden={openFaq !== i}><p>{item.a}</p></div></div>)}</div></section>
 
-      <section id="waitlist" className="waitlist-section container" aria-labelledby="waitlist-title"><div className="waitlist-inner"><div className="waitlist-copy"><div className="eyebrow"><span className="status-dot" /> YOUR STORY STARTS HERE</div><h2 id="waitlist-title">Be seen.<br />Be heard.<br /><span>Be early.</span></h2><p>The stage is taking shape.<br />Put your name on the list for what’s next.</p><div className="waitlist-brand-art" aria-hidden="true"><img src={sitePath('/assets/brand-mark-blue.svg')} alt="" width="170" height="170" /></div></div><div className="waitlist-form-wrap">{scanArrival && <p className="scan-arrival" role="status"><Check size={17} aria-hidden="true" /><span>You’re in the right place.<br /><strong>StarApp early access starts here.</strong></span></p>}{formState === 'success' ? <div className="signup-success" role="status" tabIndex={-1} ref={successRef}><span className="success-icon"><Check size={32} /></span><span className="eyebrow blue">YOU’RE ON THE LIST</span><h3>Your next chapter<br />looks good on you.</h3><p>Your interest has been saved for <strong>{submittedEmail}</strong>. You’re part of the beginning.</p><p className="success-note">We’re preparing early access. Joining the list doesn’t guarantee a beta invitation or create an app account.</p><button className="inline-link" onClick={() => { setFormState('idle'); setSubmittedEmail(''); requestAnimationFrame(() => emailRef.current?.focus({ preventScroll: true })); }}>Register another email <ArrowRight size={17} /></button><a className="success-share-link" href="#share">Know another creator? Share StarApp <ArrowUpRight size={15} /></a></div> : <form onSubmit={submit} method="post" className="waitlist-form"><noscript className="waitlist-noscript">Please enable JavaScript to join early access. Your details have not been submitted.</noscript><h3>A little about you.</h3><p className="form-subtitle">One small step. A world of possibility.</p><fieldset className="role-fieldset"><legend>I’m here as a</legend><div className="role-options"><label className={audience === 'creator' ? 'selected' : ''}><input type="radio" name="audience" value="creator" checked={audience === 'creator'} onChange={() => setAudience('creator')} /><Star size={16} /> Creator or fan</label><label className={audience === 'scout' ? 'selected' : ''}><input type="radio" name="audience" value="scout" checked={audience === 'scout'} onChange={() => setAudience('scout')} /><Compass size={16} /> Brand or scout</label></div></fieldset><label className="field-label" htmlFor="signup-name">Your name</label><input id="signup-name" type="text" name="name" placeholder="Your full name" autoComplete="name" maxLength={100} required disabled={formState === 'sending'} /><label className="field-label" htmlFor="signup-email">Email address</label><input ref={emailRef} id="signup-email" type="email" name="email" placeholder="you@example.com" autoComplete="email" maxLength={254} required disabled={formState === 'sending'} aria-describedby={error ? 'signup-error' : undefined} /><label className="field-label" htmlFor="signup-talent">{audience === 'scout' ? 'Talent you’re interested in' : 'What’s your kind of creative?'} <span>(optional)</span></label><div className="select-wrap"><select id="signup-talent" name="talent" value={talent} onChange={e => setTalent(e.target.value)} disabled={formState === 'sending'}><option value="">Choose a category</option>{categories.map(category => <option key={category}>{category}</option>)}</select><ChevronDown size={17} /></div><div className="honeypot" aria-hidden="true"><label htmlFor="website">Website</label><input type="text" name="website" id="website" tabIndex={-1} autoComplete="off" /></div><label className="consent-label"><input type="checkbox" name="consent" required disabled={formState === 'sending'} /><span>I’d like StarApp early-access and launch updates. I’ve read the <a href={sitePath('/privacy/')}>privacy notice</a>.</span></label>{error && <p id="signup-error" className="form-error" role="alert">{error}</p>}<button className="button button-blue form-submit" disabled={!formReady || formState === 'sending'} type="submit">{formState === 'sending' ? <>Saving your place <LoaderCircle size={19} className="spinner" /></> : <>Count me in <ArrowUpRight size={20} /></>}</button><p className="form-footnote"><ShieldCheck size={13} /> No payment. No app account. Just a first step.</p></form>}</div></div></section>
+      <section id="waitlist" className="waitlist-section container" aria-labelledby="waitlist-title"><div className="waitlist-inner"><div className="waitlist-copy"><div className="eyebrow"><span className="status-dot" /> YOUR STORY STARTS HERE</div><h2 id="waitlist-title">Be seen.<br />Be heard.<br /><span>Be early.</span></h2><p>The stage is taking shape.<br />Put your name on the list for what’s next.</p><div className="waitlist-brand-art" aria-hidden="true"><img src={sitePath('/assets/brand-mark-blue.svg')} alt="" width="170" height="170" /></div></div><div className="waitlist-form-wrap">{scanArrival && <p className="scan-arrival" role="status"><Check size={17} aria-hidden="true" /><span>You’re in the right place.<br /><strong>StarApp early access starts here.</strong></span></p>}{formState === 'success' ? <div className="signup-success" role="status" tabIndex={-1} ref={successRef}><span className="success-icon"><Check size={32} /></span><span className="eyebrow blue">YOU’RE ON THE LIST</span><h3>Your next chapter<br />looks good on you.</h3><p>Your interest has been saved for <strong>{submittedEmail}</strong>. You’re part of the beginning.</p><p className="success-note">We’re preparing early access. Joining the list doesn’t guarantee a beta invitation or create an app account.</p><button className="inline-link" onClick={() => { setFormState('idle'); setSubmittedEmail(''); requestAnimationFrame(() => emailRef.current?.focus({ preventScroll: true })); }}>Register another email <ArrowRight size={17} /></button><a className="success-share-link" href="#share">Know another creator? Share StarApp <ArrowUpRight size={15} /></a></div> : <form onSubmit={submit} method="post" className="waitlist-form"><noscript className="waitlist-noscript">Please enable JavaScript to join early access. Your details have not been submitted.</noscript><h3>A little about you.</h3><p className="form-subtitle">One small step. A world of possibility.</p><fieldset className="role-fieldset"><legend>I’m here as a</legend><div className="role-options"><label className={audience === 'creator' ? 'selected' : ''}><input type="radio" name="audience" value="creator" checked={audience === 'creator'} onChange={() => setAudience('creator')} /><Star size={16} /> Creator or fan</label><label className={audience === 'scout' ? 'selected' : ''}><input type="radio" name="audience" value="scout" checked={audience === 'scout'} onChange={() => setAudience('scout')} /><Compass size={16} /> Brand or scout</label></div></fieldset><label className="field-label" htmlFor="signup-name">Your name</label><input id="signup-name" type="text" name="name" placeholder="Your full name" autoComplete="name" maxLength={100} required disabled={formState === 'sending'} /><label className="field-label" htmlFor="signup-email">Email address</label><input ref={emailRef} id="signup-email" type="email" name="email" placeholder="you@example.com" autoComplete="email" maxLength={254} required disabled={formState === 'sending'} aria-describedby={error ? 'signup-error' : undefined} /><label className="field-label" htmlFor="signup-talent">{audience === 'scout' ? 'Talent you’re interested in' : 'What’s your kind of creative?'} <span>(optional)</span></label><div className="select-wrap"><select id="signup-talent" name="talent" value={talent} onChange={e => setTalent(e.target.value)} disabled={formState === 'sending'}><option value="">Choose a category</option>{categories.map(category => <option key={category}>{category}</option>)}</select><ChevronDown size={17} /></div><div className="honeypot" aria-hidden="true"><label htmlFor="website">Website</label><input type="text" name="website" id="website" tabIndex={-1} autoComplete="off" /></div><label className="consent-label"><input type="checkbox" name="consent" required disabled={formState === 'sending'} /><span>I’d like StarApp early-access and launch updates. I’ve read the <a href={sitePath('/privacy/')}>privacy notice</a>.</span></label>{error && <p id="signup-error" className="form-error" role="alert">{error}</p>}<button className="button button-blue form-submit" disabled={!formReady || formState === 'sending'} type="submit">{formState === 'sending' ? <>Sending your signup <LoaderCircle size={19} className="spinner" /></> : <>Count me in <ArrowUpRight size={20} /></>}</button><p className="form-handoff">You’ll see your submission result on Google Forms.</p><p className="form-footnote"><ShieldCheck size={13} /> No payment. No app account. Just a first step.</p></form>}</div></div></section>
       <ShareSection onJoin={() => join(audience)} />
     </main>
 

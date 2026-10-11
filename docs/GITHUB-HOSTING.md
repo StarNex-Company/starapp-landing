@@ -4,7 +4,7 @@ Repository: https://github.com/StarNex-Company/starapp-landing
 
 Website: https://starapp.starnex.company/
 
-GitHub Pages serves the landing page, privacy page, images, fonts, and 3D animation. The existing Cloudflare/Sites backend stores waitlist registrations and privacy requests. GitHub Pages is static hosting and does not run the database or API routes.
+GitHub Pages serves the landing page, privacy page, images, fonts, and 3D animation. Current signups are submitted to the StarApp team's existing Google Form. The Cloudflare/Sites backend retains earlier signup records and a separate removal-request service. GitHub Pages is static hosting and does not run the database or API routes.
 
 ## Make an update
 
@@ -27,7 +27,8 @@ The workflow uses GitHub's built-in token and OpenID Connect; no personal access
 | Images | `public/assets/` |
 | Privacy notice | `app/privacy/page.tsx` |
 | Static document metadata and build | `github-pages/`, `vite.pages.config.ts` |
-| Signup validation and storage | `lib/waitlist.ts`, `app/api/`, `db/`, `drizzle/` |
+| Current signup handoff and Google Form mapping | `app/LandingPage.tsx`, `lib/google-form.ts` |
+| Shared email validation and legacy API/storage | `lib/waitlist.ts`, `app/api/`, `db/`, `drizzle/` |
 
 ## Preview locally
 
@@ -39,15 +40,17 @@ npm run build:pages
 npx vite preview --config vite.pages.config.ts --host 127.0.0.1
 ```
 
-Open the printed address. Preview form submissions use the configured live backend; use test data only when intentionally verifying storage.
+Open the printed address. Preview signup submissions go to the configured live Google Form in the same tab; use test data only when intentionally verifying storage. Google displays the submission result, and browser Back returns to the landing page.
 
 ## Backend updates
 
 Visual and content changes publish automatically from GitHub. Database/API changes must also be deployed to the existing Sites project `appgprj_6ac918187b788191ae4afe19d7aeff20` using its source workflow. A GitHub Pages deployment alone does not update the server.
 
-Both form endpoints accept the exact site origin `https://starapp.starnex.company`, with no wildcard CORS or browser credentials. The backend must allow public visitors for the public site's forms to work. Stored registrations and privacy requests remain available only through the owner's database tools, with no public read endpoint.
+The legacy signup API and separate privacy API accept the exact site origin `https://starapp.starnex.company`, with no wildcard CORS or browser credentials. The Sites host remains private pending an explicit owner-approved access change, so public privacy submissions are unavailable. Its stored records have no public read endpoint. Deploying source alone does not change the host's audience.
 
-Email delivery is not connected. A successful form submission confirms database storage, not delivery of a confirmation email. Privacy requests require owner review and do not delete registrations automatically.
+The current signup uses a native HTML form POST to Google Forms and does not depend on Sites access or API CORS. Preserve the existing recipient and entry mapping in `lib/google-form.ts`; verify the live form after changing its questions. Google shows the real confirmation or validation errors. The site does not treat an opaque `no-cors` response as proof of storage. Name, email, role, category, and consent are sent; D1 deduplication and rate limits do not apply to this path.
+
+Email delivery is not connected by this website. An accepted form response does not confirm delivery of email. Privacy requests, once available, require owner review and action in the relevant storage service; they do not delete Google Forms or D1 registrations automatically.
 
 ## Custom domain or repository rename
 
@@ -57,7 +60,7 @@ References: [GitHub Pages hosting](https://docs.github.com/en/pages/getting-star
 
 ## QR and sharing flow
 
-The QR opens `https://starapp.starnex.company/?via=qr#waitlist`. This is the prerendered landing page with an early-access anchor, so it needs no redirect service, login, or installed app. QR visitors see a welcome message without automatically opening their keyboard. The same-device button takes them directly to the form. Successful signups offer a link back to sharing.
+The QR opens `https://starapp.starnex.company/?via=qr#waitlist`. This is the prerendered landing page with an early-access anchor, so it needs no redirect service, login, or installed app. QR visitors see a welcome message without automatically opening their keyboard. The same-device button takes them directly to the form. Submitting takes them to Google Forms for the result; browser Back returns to StarApp, where sharing remains available.
 
 Native sharing and copy-link use the matching `?via=share#waitlist` URL. Share-sheet cancellation does not copy anything; clipboard failures reveal a selectable link. The `via` marker selects the welcome treatment only; it does not add analytics or send personal information.
 
@@ -65,4 +68,4 @@ The card offers downloadable PNG and SVG versions. The SVG is preferred for prin
 
 Destinations live in `lib/share-config.json`. After changing them, regenerate both assets with `scripts/generate-qr.py` (dependency/setup instructions are in the script), rebuild, and check the decoded destination. Printed QR codes keep their original destination; changing the config cannot update already distributed copies. Keep the existing GitHub URL available or plan redirects before moving domains.
 
-The QR and sharing section can load publicly while the form service remains private. Public registration still requires the owner to authorize public access to the existing Sites backend. A QR scan alone does not register a visitor, send an email, or guarantee early access.
+The QR, sharing section, and Google Forms signup are independent of the private Sites audience. The separate removal-request service still needs explicit owner approval for public access. A QR scan alone does not register a visitor, send an email, or guarantee early access.

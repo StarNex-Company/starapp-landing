@@ -1,4 +1,4 @@
-/** Google Form that stores early-access signups. The website keeps its own form UI; Google only receives the answers. */
+/** Google Form that stores early-access signups. The website collects answers; a native POST opens Google’s confirmation page. */
 export const GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSf_C_S6q5M2an2jii93w2ahhLU5sHkxv7bWZCWk5MzZQv0rSQ/formResponse';
 
 /** Question ids from the live form (entry.<id>). Re-read them if the form's questions are edited. */
