@@ -83,4 +83,3 @@
 /* The root scroll-padding already provides clearance for the sticky header. */
 .waitlist-section,.share-section{scroll-margin-top:0}
 
-.form-handoff{font-size:11px;line-height:1.7;text-align:center;color:#5d6a83;margin:12px 0 0}
