@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerate StarApp's QR assets from lib/share-config.json.
+"""Regenerate StarApp's QR assets (early access and WhatsApp Channel) from lib/share-config.json.
 
 From a clean checkout, use Python 3.10+ and run these commands from the project
 root (macOS/Linux). The virtual environment is kept in the ignored runtime folder:
@@ -36,13 +36,18 @@ ROOT = Path(__file__).resolve().parents[1]
 NAVY = "#001f6e"
 PIXELS_PER_MODULE = 16
 QUIET_ZONE = 4
+# (config key, output file stem, accessible title)
+QR_ASSETS = [
+    ("qrUrl", "starapp-early-access-qr", "Scan to open StarApp early access"),
+    ("channelUrl", "starapp-whatsapp-channel-qr", "Scan to follow the StarApp WhatsApp Channel"),
+]
 
 
-def generate() -> tuple[str, Path, Path, int]:
+def generate(key: str, stem: str, title: str) -> tuple[str, Path, Path, int]:
     config = json.loads((ROOT / "lib/share-config.json").read_text())
-    target = config["qrUrl"]
+    target = config[key]
     if not isinstance(target, str) or not target.startswith("https://"):
-        raise ValueError("qrUrl must be an absolute HTTPS URL")
+        raise ValueError(f"{key} must be an absolute HTTPS URL")
 
     qr = qrcode.QRCode(
         error_correction=qrcode.constants.ERROR_CORRECT_Q,
@@ -74,14 +79,14 @@ def generate() -> tuple[str, Path, Path, int]:
 
     assets = ROOT / "public/assets"
     assets.mkdir(parents=True, exist_ok=True)
-    png = assets / "starapp-early-access-qr.png"
-    svg = assets / "starapp-early-access-qr.svg"
+    png = assets / f"{stem}.png"
+    svg = assets / f"{stem}.svg"
     image.save(png, optimize=False)
     svg.write_text(
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {modules} {modules}" '
         f'width="{pixels}" height="{pixels}" shape-rendering="crispEdges" role="img" '
         'aria-labelledby="qr-title qr-description">\n'
-        '<title id="qr-title">Scan to open StarApp early access</title>\n'
+        f'<title id="qr-title">{escape(title)}</title>\n'
         f'<desc id="qr-description">{escape(target)}</desc>\n'
         f'<rect width="{modules}" height="{modules}" fill="#fff"/>\n'
         f'<path fill="{NAVY}" d="{"".join(paths)}"/>\n'
@@ -121,9 +126,6 @@ def verify(target: str, png: Path, svg: Path, modules: int, raster: str | None) 
              "decoded": decoded, "passed": decoded == target}
         )
     report["passed"] = all(check["passed"] for check in report["checks"])
-    qa = ROOT / ".sites-runtime/qa"
-    qa.mkdir(parents=True, exist_ok=True)
-    (qa / "qr-decode.json").write_text(json.dumps(report, indent=2) + "\n")
     return report
 
 
@@ -132,11 +134,17 @@ def main() -> None:
     parser.add_argument("--verify", action="store_true")
     parser.add_argument("--svg-raster", help="Path to an independently rasterized SVG")
     args = parser.parse_args()
-    target, png, svg, modules = generate()
+    reports = []
+    for key, stem, title in QR_ASSETS:
+        target, png, svg, modules = generate(key, stem, title)
+        if args.verify:
+            reports.append(verify(target, png, svg, modules, args.svg_raster if key == "qrUrl" else None))
     if args.verify:
-        report = verify(target, png, svg, modules, args.svg_raster)
-        print(json.dumps(report, indent=2))
-        if not report["passed"]:
+        qa = ROOT / ".sites-runtime/qa"
+        qa.mkdir(parents=True, exist_ok=True)
+        (qa / "qr-decode.json").write_text(json.dumps(reports, indent=2) + "\n")
+        print(json.dumps(reports, indent=2))
+        if not all(report["passed"] for report in reports):
             raise SystemExit("QR verification failed")
 
 

@@ -83,3 +83,15 @@
 /* The root scroll-padding already provides clearance for the sticky header. */
 .waitlist-section,.share-section{scroll-margin-top:0}
 
+/* WhatsApp Channel invitation shown after a successful signup */
+.success-channel{display:flex;align-items:center;gap:16px;width:100%;margin-top:18px;padding:16px;border:1px solid #e1e5ef;border-radius:10px;background:#f7f9ff}
+.success-channel-copy{flex:1;min-width:0}
+.success-channel-copy>.eyebrow{font-size:8px}
+.success-channel-copy>p{font-size:11px;line-height:1.7;color:#5d6a83;margin:6px 0 12px}
+.channel-button{display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;font-size:12px;font-weight:700;min-height:44px;padding:11px 16px;border-radius:999px}
+.channel-button:hover{background:#1ebe5a}
+.channel-button:focus-visible{outline:2px solid #128c4a;outline-offset:3px}
+.channel-qr{flex:none;margin:0;text-align:center}
+.channel-qr>img{display:block;width:112px;height:112px;border-radius:6px;background:#fff}
+.channel-qr>figcaption{font-size:9px;color:#8a93a8;margin-top:6px}
+@media (max-width:760px){.channel-qr{display:none}.channel-button{width:100%;justify-content:center}}
