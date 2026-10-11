@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { sitePath } from "../../lib/site-paths";
+import { onMediaQueryChange } from "../../lib/media-query";
 
 type BrandSceneProps = {
   paused?: boolean;
@@ -307,10 +308,10 @@ export default function BrandScene({ paused = false }: BrandSceneProps) {
         cleanups.push(() => intersectionObserver.disconnect());
 
         document.addEventListener("visibilitychange", refreshMotion);
-        motionQuery.addEventListener("change", refreshMotion);
+        const stopMotionListener = onMediaQueryChange(motionQuery, refreshMotion);
         cleanups.push(() => {
           document.removeEventListener("visibilitychange", refreshMotion);
-          motionQuery.removeEventListener("change", refreshMotion);
+          stopMotionListener();
         });
 
         const contextLost = (event: Event) => {

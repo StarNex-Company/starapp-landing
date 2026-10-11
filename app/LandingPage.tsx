@@ -5,6 +5,7 @@ import { ArrowUpRight, ArrowRight, ArrowDown, Check, ChevronDown, Globe2, Sparkl
 import BrandScene from './components/BrandScene';
 import ShareSection from './components/ShareSection';
 import { sitePath } from '../lib/site-paths';
+import { onMediaQueryChange } from '../lib/media-query';
 import { GOOGLE_FORM_ACTION, googleFormBody } from '../lib/google-form';
 import { normalizeSignupEmail, WAITLIST_CONSENT_VERSION } from '../lib/waitlist';
 
@@ -78,11 +79,11 @@ export default function LandingPage() {
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = () => setReducedMotion(query.matches);
-    update(); query.addEventListener('change', update);
+    update(); const unsubscribe = onMediaQueryChange(query, update);
     try {
       if (localStorage.getItem('starapp-motion-paused') === 'true') setPaused(true);
     } catch { /* Browsers may disable preference storage. */ }
-    return () => query.removeEventListener('change', update);
+    return unsubscribe;
   }, []);
 
   useEffect(() => {

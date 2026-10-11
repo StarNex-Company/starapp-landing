@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import legacy from '@vitejs/plugin-legacy';
 import { fileURLToPath } from 'node:url';
 
 const projectRoot = fileURLToPath(new URL('.', import.meta.url));
@@ -23,6 +24,13 @@ export default defineConfig({
   publicDir: fromRoot('./public/'),
   plugins: [
     react(),
+    // Older phones (iOS Safari 12+, Android Chrome 64+, Samsung Internet) get syntax lowered and missing APIs
+    // polyfilled; browsers without module support load a separate legacy bundle.
+    legacy({
+      targets: ['defaults', 'iOS >= 10', 'Safari >= 10', 'Chrome >= 49', 'Firefox >= 52', 'Samsung >= 5', 'not IE 11'],
+      modernTargets: ['iOS >= 12', 'Safari >= 12', 'Chrome >= 64', 'Edge >= 79', 'Firefox >= 67', 'Samsung >= 9'],
+      modernPolyfills: true,
+    }),
     {
       name: 'starapp-pages-metadata',
       transformIndexHtml(html) {
@@ -36,6 +44,8 @@ export default defineConfig({
     __STARAPP_API_ORIGIN__: JSON.stringify(apiOrigin.replace(/\/+$/, '')),
   },
   build: {
+    // Lower modern CSS (oklch, color-mix, nesting) for the same older Safari versions.
+    cssTarget: ['safari12', 'ios12', 'chrome64', 'edge79', 'firefox67'],
     outDir: fromRoot('./dist-pages/'),
     emptyOutDir: true,
     rollupOptions: {
